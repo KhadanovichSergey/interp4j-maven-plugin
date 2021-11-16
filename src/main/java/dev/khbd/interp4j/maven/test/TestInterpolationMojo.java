@@ -27,7 +27,7 @@ public class TestInterpolationMojo extends AbstractInterpolationMojo {
      * Output directory where interp4j must generate his output (interpolated test source code).
      */
     @Parameter(property = "Output folder for test sources",
-            defaultValue = "${project.build.directory}/generated-test-sources/interp4j")
+            defaultValue = "${project.build.directory}/test-interp4j")
     private File outputFolder;
 
     @Override
