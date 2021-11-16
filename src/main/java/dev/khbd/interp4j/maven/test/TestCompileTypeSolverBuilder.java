@@ -11,9 +11,9 @@ import java.io.IOException;
 /**
  * @author Sergei_Khadanovich
  */
-class TestTypeSolverBuilder extends AbstractTypeSolverBuilder {
+class TestCompileTypeSolverBuilder extends AbstractTypeSolverBuilder {
 
-    TestTypeSolverBuilder(InterpolationReporter reporter) {
+    TestCompileTypeSolverBuilder(InterpolationReporter reporter) {
         super(reporter);
     }
 
