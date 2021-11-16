@@ -11,32 +11,32 @@ import org.apache.maven.plugin.logging.Log;
  * @author Sergei_Khadanovich
  */
 @RequiredArgsConstructor
-class InterpolationReporter implements Reporter {
+public class InterpolationReporter implements Reporter {
 
     private final Log logger;
 
     @Getter
     boolean anyErrorReported;
 
-    void debug(String template, Object... args) {
+    public void debug(String template, Object... args) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format(template, args));
         }
     }
 
-    void error(String template, Object... args) {
+    public void error(String template, Object... args) {
         this.anyErrorReported = true;
 
         logger.error(String.format(template, args));
     }
 
-    void warn(String template, Object... args) {
+    public void warn(String template, Object... args) {
         if (logger.isWarnEnabled()) {
             logger.warn(String.format(template, args));
         }
     }
 
-    void info(String template, Object... args) {
+    public void info(String template, Object... args) {
         if (logger.isInfoEnabled()) {
             logger.info(String.format(template, args));
         }

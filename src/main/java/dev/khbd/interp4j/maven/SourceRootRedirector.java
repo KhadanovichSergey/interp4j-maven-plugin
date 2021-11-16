@@ -1,28 +1,19 @@
 package dev.khbd.interp4j.maven;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
 
 /**
  * @author Sergei_Khadanovich
  */
-@RequiredArgsConstructor
-class SourceRootRedirector {
+public interface SourceRootRedirector {
 
-    private final Config config;
-
-    void redirect(MavenProject project) {
-        redirectCompileSourceRoot(project);
-        redirectTestCompileSourceRoot(project);
-    }
-
-    void redirectCompileSourceRoot(MavenProject project) {
-        project.getCompileSourceRoots().clear();
-        project.addCompileSourceRoot(config.getSourceOutputFolder().getAbsolutePath());
-    }
-
-    void redirectTestCompileSourceRoot(MavenProject project) {
-        project.getTestCompileSourceRoots().clear();
-        project.addTestCompileSourceRoot(config.getTestSourceOutputFolder().getAbsolutePath());
-    }
+    /**
+     * Redirect source roots to output folder.
+     *
+     * @param project      maven project
+     * @param outputFolder new source output folder
+     */
+    void redirect(MavenProject project, File outputFolder);
 }
