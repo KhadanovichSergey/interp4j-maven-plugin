@@ -11,6 +11,5 @@ import java.io.File;
 @Builder
 @Getter
 public class Config {
-    private final File sourceOutputFolder;
-    private final File testSourceOutputFolder;
+    private final File outputFolder;
 }
