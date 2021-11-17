@@ -2,11 +2,7 @@ package dev.khbd.interp4j.maven.test;
 
 import dev.khbd.interp4j.maven.AbstractInterpolationMojo;
 import dev.khbd.interp4j.maven.Config;
-import dev.khbd.interp4j.maven.InterpolationExecutor;
-import dev.khbd.interp4j.maven.InterpolationReporter;
 import dev.khbd.interp4j.maven.SourceRootRedirector;
-import dev.khbd.interp4j.maven.TypeSolverBuilder;
-import dev.khbd.interp4j.processor.s.SInterpolationProcessor;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -41,11 +37,5 @@ public class TestInterpolationMojo extends AbstractInterpolationMojo {
     @Override
     protected SourceRootRedirector getSourceRootRedirector() {
         return new TestCompileSourceRootRedirector();
-    }
-
-    @Override
-    protected InterpolationExecutor getInterpolationExecutor(SInterpolationProcessor processor,
-                                                             InterpolationReporter reporter) {
-        return new TestCompileInterpolationExecutor(processor, reporter);
     }
 }

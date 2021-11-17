@@ -36,7 +36,7 @@ public abstract class AbstractInterpolationMojo extends AbstractMojo {
             TypeSolver typeSolver = new TypeSolverBuilder(reporter, config).build(project);
             SInterpolationProcessor processor = new SInterpolationProcessor(typeSolver, reporter);
 
-            InterpolationExecutor executor = getInterpolationExecutor(processor, reporter);
+            InterpolationExecutor executor = new InterpolationExecutor(processor, reporter, config);
             executor.execute(project, config.getOutputFolder());
 
             getSourceRootRedirector().redirect(project, config.getOutputFolder());
@@ -52,7 +52,4 @@ public abstract class AbstractInterpolationMojo extends AbstractMojo {
     protected abstract Config buildConfig();
 
     protected abstract SourceRootRedirector getSourceRootRedirector();
-
-    protected abstract InterpolationExecutor getInterpolationExecutor(SInterpolationProcessor processor,
-                                                                      InterpolationReporter reporter);
 }
