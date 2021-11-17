@@ -44,7 +44,12 @@ public class InterpolationReporter implements Reporter {
     }
 
     private String buildMessage(String template, Object... args) {
-        String msg = String.format(template, args);
+        String msg;
+        if (args.length == 0) {
+            msg = template;
+        } else {
+            msg = String.format(template, args);
+        }
         return "[ " + label + " ] " + msg;
     }
 
