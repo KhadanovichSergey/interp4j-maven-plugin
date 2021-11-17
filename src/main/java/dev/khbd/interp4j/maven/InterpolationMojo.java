@@ -1,8 +1,5 @@
-package dev.khbd.interp4j.maven.compile;
+package dev.khbd.interp4j.maven;
 
-import dev.khbd.interp4j.maven.AbstractInterpolationMojo;
-import dev.khbd.interp4j.maven.Config;
-import dev.khbd.interp4j.maven.SourceRootRedirector;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -32,10 +29,5 @@ public class InterpolationMojo extends AbstractInterpolationMojo {
                 .outputFolder(outputFolder)
                 .test(false)
                 .build();
-    }
-
-    @Override
-    protected SourceRootRedirector getSourceRootRedirector() {
-        return new CompileSourceRootRedirector();
     }
 }

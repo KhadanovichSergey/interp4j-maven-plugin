@@ -37,9 +37,9 @@ public abstract class AbstractInterpolationMojo extends AbstractMojo {
             SInterpolationProcessor processor = new SInterpolationProcessor(typeSolver, reporter);
 
             InterpolationExecutor executor = new InterpolationExecutor(processor, reporter, config);
-            executor.execute(project, config.getOutputFolder());
+            executor.execute(project);
 
-            getSourceRootRedirector().redirect(project, config.getOutputFolder());
+            new SourceRootRedirector(config).redirect(project);
 
             if (reporter.isAnyErrorReported()) {
                 throw new MojoFailureException("Interpolation was completed with errors");
@@ -50,6 +50,4 @@ public abstract class AbstractInterpolationMojo extends AbstractMojo {
     }
 
     protected abstract Config buildConfig();
-
-    protected abstract SourceRootRedirector getSourceRootRedirector();
 }

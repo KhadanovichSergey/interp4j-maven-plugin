@@ -8,7 +8,6 @@ import dev.khbd.interp4j.processor.s.SInterpolationProcessor;
 import lombok.RequiredArgsConstructor;
 import org.apache.maven.project.MavenProject;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,26 +25,25 @@ public class InterpolationExecutor {
     /**
      * Execute interpolation.
      *
-     * @param project      maven project
-     * @param outputFolder output folder
+     * @param project maven project
      * @throws IOException if any io error occur
      */
-    public void execute(MavenProject project, File outputFolder) throws IOException {
+    public void execute(MavenProject project) throws IOException {
         if (config.isTest()) {
-            interpolateSourceRoots(project.getTestCompileSourceRoots(), outputFolder);
+            interpolateSourceRoots(project.getTestCompileSourceRoots());
         } else {
-            interpolateSourceRoots(project.getCompileSourceRoots(), outputFolder);
+            interpolateSourceRoots(project.getCompileSourceRoots());
         }
     }
 
-    private void interpolateSourceRoots(List<String> roots, File outputFolder) throws IOException {
+    private void interpolateSourceRoots(List<String> roots) throws IOException {
         for (String sourceRoot : roots) {
             reporter.debug("Interpolate source root: '%s'", sourceRoot);
-            interpolateSourceRoot(sourceRoot, outputFolder);
+            interpolateSourceRoot(sourceRoot);
         }
     }
 
-    private void interpolateSourceRoot(String sourceRoot, File outputFolder) throws IOException {
+    private void interpolateSourceRoot(String sourceRoot) throws IOException {
         SourceRoot root = new SourceRoot(Path.of(sourceRoot));
         List<ParseResult<CompilationUnit>> parseResults = root.tryToParse();
         for (ParseResult<CompilationUnit> result : parseResults) {
@@ -54,7 +52,7 @@ public class InterpolationExecutor {
                 reportAllProblems(result.getProblems());
             }
         }
-        root.saveAll(outputFolder.toPath());
+        root.saveAll(config.getOutputFolder().toPath());
     }
 
     private void reportAllProblems(List<Problem> problems) {
