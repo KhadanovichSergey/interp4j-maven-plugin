@@ -5,7 +5,6 @@ import dev.khbd.interp4j.maven.Config;
 import dev.khbd.interp4j.maven.InterpolationExecutor;
 import dev.khbd.interp4j.maven.InterpolationReporter;
 import dev.khbd.interp4j.maven.SourceRootRedirector;
-import dev.khbd.interp4j.maven.TypeSolverBuilder;
 import dev.khbd.interp4j.processor.s.SInterpolationProcessor;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -34,17 +33,13 @@ public class InterpolationMojo extends AbstractInterpolationMojo {
     protected Config buildConfig() {
         return Config.builder()
                 .outputFolder(outputFolder)
+                .test(false)
                 .build();
     }
 
     @Override
     protected SourceRootRedirector getSourceRootRedirector() {
         return new CompileSourceRootRedirector();
-    }
-
-    @Override
-    protected TypeSolverBuilder getTypeSolverBuilder(InterpolationReporter reporter) {
-        return new CompileTypeSolverBuilder(reporter);
     }
 
     @Override

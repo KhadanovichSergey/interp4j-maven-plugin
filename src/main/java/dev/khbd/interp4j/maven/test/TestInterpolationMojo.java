@@ -34,17 +34,13 @@ public class TestInterpolationMojo extends AbstractInterpolationMojo {
     protected Config buildConfig() {
         return Config.builder()
                 .outputFolder(outputFolder)
+                .test(true)
                 .build();
     }
 
     @Override
     protected SourceRootRedirector getSourceRootRedirector() {
         return new TestCompileSourceRootRedirector();
-    }
-
-    @Override
-    protected TypeSolverBuilder getTypeSolverBuilder(InterpolationReporter reporter) {
-        return new TestCompileTypeSolverBuilder(reporter);
     }
 
     @Override

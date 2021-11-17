@@ -12,4 +12,5 @@ import java.io.File;
 @Getter
 public class Config {
     private final File outputFolder;
+    private final boolean test;
 }
