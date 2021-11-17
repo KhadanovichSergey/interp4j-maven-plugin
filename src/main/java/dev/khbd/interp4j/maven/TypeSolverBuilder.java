@@ -37,10 +37,10 @@ public class TypeSolverBuilder {
     public TypeSolver build(MavenProject project) throws IOException {
         CombinedTypeSolver typeSolver = new CombinedTypeSolver();
         typeSolver.add(buildArtifactsTypeSolver(project));
-        typeSolver.add(buildSourceRootsTypeSolver(project, project.getCompileSourceRoots()));
+        typeSolver.add(buildSourceRootsTypeSolver(project.getCompileSourceRoots()));
         typeSolver.add(new ClassLoaderTypeSolver(ClassLoader.getSystemClassLoader()));
         if (config.isTest()) {
-            typeSolver.add(buildSourceRootsTypeSolver(project, project.getTestCompileSourceRoots()));
+            typeSolver.add(buildSourceRootsTypeSolver(project.getTestCompileSourceRoots()));
         }
         return typeSolver;
     }
@@ -50,13 +50,13 @@ public class TypeSolverBuilder {
         Set<Artifact> artifacts = project.getArtifacts();
 
         if (Objects.isNull(artifacts) || artifacts.isEmpty()) {
-            reporter.debug("Any artifacts were not found for project '%s'", project.getName());
+            reporter.debug("Any artifacts were not found");
             return combinedTypeSolver;
         }
 
         for (Artifact artifact : artifacts) {
             String absolutePath = artifact.getFile().getAbsolutePath();
-            reporter.debug("Artifact '%s' was found for project '%s'", absolutePath, project.getName());
+            reporter.debug("Artifact '%s' was found", absolutePath);
 
             if (artifact.getFile().isFile()) {
                 // jar or war file, may be :)
@@ -73,11 +73,11 @@ public class TypeSolverBuilder {
         return combinedTypeSolver;
     }
 
-    private CombinedTypeSolver buildSourceRootsTypeSolver(MavenProject project, List<String> sourceRoots) {
+    private CombinedTypeSolver buildSourceRootsTypeSolver(List<String> sourceRoots) {
         CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
 
         for (String sourceRoot : sourceRoots) {
-            reporter.debug("Compile source root '%s' was found for project '%s'", sourceRoot, project.getName());
+            reporter.debug("Compile source root '%s' was found", sourceRoot);
 
             if (!Files.exists(Path.of(sourceRoot))) {
                 reporter.debug("Compile source root '%s' does not exist. Skip It!", sourceRoot);

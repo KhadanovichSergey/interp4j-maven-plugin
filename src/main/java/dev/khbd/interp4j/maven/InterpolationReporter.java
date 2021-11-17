@@ -13,6 +13,7 @@ import org.apache.maven.plugin.logging.Log;
 @RequiredArgsConstructor
 public class InterpolationReporter implements Reporter {
 
+    private final String label;
     private final Log logger;
 
     @Getter
@@ -20,26 +21,31 @@ public class InterpolationReporter implements Reporter {
 
     public void debug(String template, Object... args) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format(template, args));
+            logger.debug(buildMessage(template, args));
         }
     }
 
     public void error(String template, Object... args) {
         this.anyErrorReported = true;
 
-        logger.error(String.format(template, args));
+        logger.error(buildMessage(template, args));
     }
 
     public void warn(String template, Object... args) {
         if (logger.isWarnEnabled()) {
-            logger.warn(String.format(template, args));
+            logger.warn(buildMessage(template, args));
         }
     }
 
     public void info(String template, Object... args) {
         if (logger.isInfoEnabled()) {
-            logger.info(String.format(template, args));
+            logger.info(buildMessage(template, args));
         }
+    }
+
+    private String buildMessage(String template, Object... args) {
+        String msg = String.format(template, args);
+        return "[ " + label + " ] " + msg;
     }
 
     @Override

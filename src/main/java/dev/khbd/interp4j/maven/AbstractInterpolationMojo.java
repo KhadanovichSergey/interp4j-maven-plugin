@@ -30,7 +30,7 @@ public abstract class AbstractInterpolationMojo extends AbstractMojo {
 
         OutputDirectoryInitializer.initializeOutputDirectory(config.getOutputFolder());
 
-        InterpolationReporter reporter = new InterpolationReporter(getLog());
+        InterpolationReporter reporter = new InterpolationReporter(project.getName(), getLog());
 
         try {
             TypeSolver typeSolver = new TypeSolverBuilder(reporter, config).build(project);
