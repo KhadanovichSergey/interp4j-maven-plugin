@@ -2,8 +2,11 @@ package dev.khbd.interp4j.maven;
 
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.Problem;
+import com.github.javaparser.Range;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.utils.SourceRoot;
+import dev.khbd.interp4j.processor.s.ProcessingProblem;
+import dev.khbd.interp4j.processor.s.ProcessingResult;
 import dev.khbd.interp4j.processor.s.SInterpolationProcessor;
 import lombok.RequiredArgsConstructor;
 import org.apache.maven.project.MavenProject;
@@ -11,6 +14,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Sergei_Khadanovich
@@ -18,8 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterpolationExecutor {
 
-    private final SInterpolationProcessor processor;
-    private final InterpolationReporter reporter;
+    private final Reporter reporter;
     private final Config config;
 
     /**
@@ -38,7 +41,7 @@ public class InterpolationExecutor {
 
     private void interpolateSourceRoots(List<String> roots) throws IOException {
         for (String sourceRoot : roots) {
-            reporter.debug("Interpolate source root: '%s'", sourceRoot);
+            reporter.info(String.format("Interpolate source root: '%s'", sourceRoot));
             interpolateSourceRoot(sourceRoot);
         }
     }
@@ -46,16 +49,52 @@ public class InterpolationExecutor {
     private void interpolateSourceRoot(String sourceRoot) throws IOException {
         SourceRoot root = new SourceRoot(Path.of(sourceRoot));
         List<ParseResult<CompilationUnit>> parseResults = root.tryToParse();
-        for (ParseResult<CompilationUnit> result : parseResults) {
-            result.ifSuccessful(cu -> cu.accept(processor, null));
-            if (!result.getProblems().isEmpty()) {
-                reportAllProblems(result.getProblems());
+        for (ParseResult<CompilationUnit> parseResult : parseResults) {
+            if (!parseResult.getProblems().isEmpty()) {
+                reportParseProblems(parseResult.getProblems());
             }
+            parseResult.ifSuccessful(unit -> {
+                SInterpolationProcessor processor = SInterpolationProcessor.getInstance();
+                ProcessingResult processingResult = processor.process(unit);
+                reportProcessingProblems(unit, processingResult.getProblems());
+            });
         }
         root.saveAll(config.getOutputFolder().toPath());
     }
 
-    private void reportAllProblems(List<Problem> problems) {
+    private void reportProcessingProblems(CompilationUnit unit, List<ProcessingProblem> problems) {
+        for (ProcessingProblem problem : problems) {
+            reportProcessingProblem(unit, problem);
+        }
+    }
+
+    private void reportProcessingProblem(CompilationUnit unit, ProcessingProblem problem) {
+        reporter.report(problem.getKind(), buildMessage(unit, problem));
+    }
+
+    private String buildMessage(CompilationUnit unit, ProcessingProblem problem) {
+        StringBuilder msgBuilder = new StringBuilder();
+
+        String compilationUnitPath = unit.getStorage()
+                .map(st -> st.getPath().toString())
+                .orElse(null);
+        if (Objects.nonNull(compilationUnitPath)) {
+            msgBuilder.append(compilationUnitPath);
+        }
+
+        Range range = problem.getRange();
+        if (Objects.nonNull(range)) {
+            msgBuilder.append(" ");
+            msgBuilder.append(range);
+        }
+
+        msgBuilder.append(":");
+        msgBuilder.append(problem.getMessage());
+
+        return msgBuilder.toString();
+    }
+
+    private void reportParseProblems(List<Problem> problems) {
         for (Problem problem : problems) {
             reporter.error(problem.getVerboseMessage());
         }
