@@ -19,7 +19,7 @@ public class InterpolationMojo extends AbstractInterpolationMojo {
     /**
      * Output directory where interp4j must generate his output (interpolated source code).
      */
-    @Parameter(property = "Output folder for sources",
+    @Parameter(property = "outputFolder",
             defaultValue = "${project.build.directory}/interp4j")
     private File outputFolder;
 
