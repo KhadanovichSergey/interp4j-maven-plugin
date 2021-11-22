@@ -1,6 +1,7 @@
 package dev.khbd.interp4j.maven;
 
 import com.github.javaparser.ParseResult;
+import com.github.javaparser.Position;
 import com.github.javaparser.Problem;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.CompilationUnit;
@@ -84,14 +85,22 @@ public class InterpolationExecutor {
 
         Range range = problem.getRange();
         if (Objects.nonNull(range)) {
-            msgBuilder.append(" ");
-            msgBuilder.append(range);
+            msgBuilder.append(":");
+            addPosition(msgBuilder, range.begin);
         }
 
-        msgBuilder.append(":");
+        msgBuilder.append(" ");
         msgBuilder.append(problem.getMessage());
 
         return msgBuilder.toString();
+    }
+
+    private void addPosition(StringBuilder builder, Position begin) {
+        builder.append("[");
+        builder.append(begin.line);
+        builder.append(",");
+        builder.append(begin.column);
+        builder.append("]");
     }
 
     private void reportParseProblems(List<Problem> problems) {
